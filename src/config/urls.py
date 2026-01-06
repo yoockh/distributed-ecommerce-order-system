@@ -6,4 +6,5 @@ urlpatterns = [
 
     # API routes
     path("api/", include("apps.catalog.api.urls")),
+    path("api/", include("apps.orders.api.urls")),
 ]
