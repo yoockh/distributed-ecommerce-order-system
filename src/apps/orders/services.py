@@ -3,6 +3,7 @@ from django.db.models import F
 
 from apps.catalog.models import Product
 from apps.orders.models import Order, OrderLog, OrderStatus
+from apps.orders.tasks import process_order
 
 
 class ProductNotFound(Exception):
@@ -46,13 +47,7 @@ def purchase_product(*, product_id: int, quantity: int) -> Order:
     )
     OrderLog.objects.create(order=order, event="Order created")
 
-    # enqueue background task (if celery is set)
-    try:
-        from apps.orders.tasks import process_order
-        process_order.delay(order.id)
-    except Exception:
-        # in early dev phase, if celery is not ready, don't fail the purchase
-        # later, when ready, remove this try/except
-        pass
+    # enqueue background task (celery)
+    process_order.delay(order.id)
 
     return order
