@@ -49,7 +49,7 @@ class ProductViewSet(viewsets.ModelViewSet):
             cache.set(
                 cache_key,
                 response.data,
-                timeout=getattr(settings, "PRODUCT_DETAIL_CACHE_TTL", 300),
+                timeout=settings.PRODUCT_DETAIL_CACHE_TTL,
             )
         except Exception:  # keep serving fresh data if cache disabled
             logger.warning("Product cache set failed", extra={"product_id": product_pk}, exc_info=True)
