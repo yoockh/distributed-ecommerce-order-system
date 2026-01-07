@@ -29,6 +29,7 @@ INSTALLED_APPS = [
 
     # Third-party
     "rest_framework",
+    "drf_spectacular",
 
     # Local apps
     "apps.catalog",
@@ -97,6 +98,7 @@ REST_FRAMEWORK = {
     # Default pagination
     "DEFAULT_PAGINATION_CLASS": "rest_framework.pagination.PageNumberPagination",
     "PAGE_SIZE": 10,
+    "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
 CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")
@@ -118,4 +120,14 @@ CACHES = {
             "CLIENT_CLASS": "django_redis.client.DefaultClient",
         },
     }
+}
+
+SPECTACULAR_SETTINGS = {
+    "TITLE": "Distributed E-Commerce Order API",
+    "DESCRIPTION": "API untuk manajemen produk dan pemesanan dengan pemrosesan background.",
+    "VERSION": "1.0.0",
+    "SERVERS": [
+        {"url": "http://localhost:8000", "description": "Local"},
+        {"url": "https://{host}", "description": "Production", "variables": {"host": {"default": "example.com"}}},
+    ],
 }
