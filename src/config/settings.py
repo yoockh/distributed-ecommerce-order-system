@@ -1,6 +1,5 @@
 from pathlib import Path
 import environ
-import os
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -108,8 +107,8 @@ CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
 
 # Redis cache (Product Details)
-REDIS_CACHE_URL = os.getenv("REDIS_CACHE_URL", "redis://localhost:6379/0")
-PRODUCT_DETAIL_CACHE_TTL = int(os.getenv("PRODUCT_DETAIL_CACHE_TTL", "300"))  # seconds
+REDIS_CACHE_URL = env("REDIS_CACHE_URL")
+PRODUCT_DETAIL_CACHE_TTL = env.int("PRODUCT_DETAIL_CACHE_TTL", default=300)
 
 CACHES = {
     "default": {

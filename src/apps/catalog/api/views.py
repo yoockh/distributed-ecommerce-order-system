@@ -8,7 +8,7 @@ from rest_framework.response import Response
 
 from apps.catalog.models import Product
 from apps.catalog.api.serializers import ProductSerializer
-from .cache_keys import product_detail_cache_key
+from apps.catalog.api.cache_keys import product_detail_cache_key
 
 
 logger = logging.getLogger(__name__)
