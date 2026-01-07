@@ -1,5 +1,6 @@
 from pathlib import Path
 import environ
+import os
 
 
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -105,3 +106,17 @@ CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default=CELERY_BROKER_URL)
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+
+# Redis cache (Product Details)
+REDIS_CACHE_URL = os.getenv("REDIS_CACHE_URL", "redis://redis:6379/1")
+PRODUCT_DETAIL_CACHE_TTL = int(os.getenv("PRODUCT_DETAIL_CACHE_TTL", "300"))  # seconds
+
+CACHES = {
+    "default": {
+        "BACKEND": "django_redis.cache.RedisCache",
+        "LOCATION": REDIS_CACHE_URL,
+        "OPTIONS": {
+            "CLIENT_CLASS": "django_redis.client.DefaultClient",
+        },
+    }
+}
