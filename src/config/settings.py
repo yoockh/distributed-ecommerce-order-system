@@ -108,6 +108,13 @@ CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
 CELERY_RESULT_SERIALIZER = "json"
+CELERY_BROKER_CONNECTION_RETRY_ON_STARTUP = True
+CELERY_BROKER_TRANSPORT_OPTIONS = {
+    "socket_keepalive": True,
+    "socket_timeout": 30,
+    "socket_connect_timeout": 30,
+    "retry_on_timeout": True,
+}
 
 # Redis cache (Product Details)
 REDIS_CACHE_URL = env("REDIS_CACHE_URL")
