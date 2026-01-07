@@ -29,13 +29,17 @@ class ProductViewSet(viewsets.ModelViewSet):
     permission_classes = [AllowAny]
 
     def retrieve(self, request, *args, **kwargs):
-        pk = kwargs.get(self.lookup_field or "pk")
-        cache_key = product_detail_cache_key(pk)
+        raw_pk = kwargs.get(self.lookup_field or "pk")
+        if raw_pk is None:
+            return super().retrieve(request, *args, **kwargs)
+
+        product_pk = str(raw_pk)
+        cache_key = product_detail_cache_key(product_pk)
 
         try:
             cached = cache.get(cache_key)
         except Exception:  # fallback if Redis misconfigured/unavailable
-            logger.warning("Product cache get failed", extra={"product_id": pk}, exc_info=True)
+            logger.warning("Product cache get failed", extra={"product_id": product_pk}, exc_info=True)
             cached = None
         if cached is not None:
             return Response(cached)
@@ -48,7 +52,7 @@ class ProductViewSet(viewsets.ModelViewSet):
                 timeout=getattr(settings, "PRODUCT_DETAIL_CACHE_TTL", 300),
             )
         except Exception:  # keep serving fresh data if cache disabled
-            logger.warning("Product cache set failed", extra={"product_id": pk}, exc_info=True)
+            logger.warning("Product cache set failed", extra={"product_id": product_pk}, exc_info=True)
         return response
 
     def _invalidate_product_detail_cache(self, product_pk: int | str) -> None:

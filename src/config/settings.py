@@ -1,4 +1,5 @@
 from pathlib import Path
+
 import environ
 
 
@@ -9,11 +10,11 @@ env = environ.Env(
 )
 environ.Env.read_env(BASE_DIR.parent / ".env")  # repo-root/.env
 
-SECRET_KEY = env("DJANGO_SECRET_KEY", default="change-me")
+SECRET_KEY = env("DJANGO_SECRET_KEY")
 
-DEBUG = env("DEBUG")
+DEBUG = env.bool("DEBUG")
 
-ALLOWED_HOSTS = env.list("ALLOWED_HOSTS", default=["*"])
+ALLOWED_HOSTS = env.list("ALLOWED_HOSTS")
 
 
 # Application definition
@@ -66,7 +67,7 @@ TEMPLATES = [
 WSGI_APPLICATION = 'config.wsgi.application'
 
 DATABASES = {
-    "default": env.db("DATABASE_URL", default="postgres://postgres:postgres@localhost:5432/ordersdb")
+    "default": env.db("DATABASE_URL")
 }
 
 AUTH_PASSWORD_VALIDATORS = [
@@ -101,8 +102,8 @@ REST_FRAMEWORK = {
     "DEFAULT_SCHEMA_CLASS": "drf_spectacular.openapi.AutoSchema",
 }
 
-CELERY_BROKER_URL = env("CELERY_BROKER_URL", default="redis://localhost:6379/0")
-CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND", default=CELERY_BROKER_URL)
+CELERY_BROKER_URL = env("CELERY_BROKER_URL")
+CELERY_RESULT_BACKEND = env("CELERY_RESULT_BACKEND")
 
 CELERY_ACCEPT_CONTENT = ["json"]
 CELERY_TASK_SERIALIZER = "json"
@@ -110,7 +111,7 @@ CELERY_RESULT_SERIALIZER = "json"
 
 # Redis cache (Product Details)
 REDIS_CACHE_URL = env("REDIS_CACHE_URL")
-PRODUCT_DETAIL_CACHE_TTL = env.int("PRODUCT_DETAIL_CACHE_TTL", default=300)
+PRODUCT_DETAIL_CACHE_TTL = env.int("PRODUCT_DETAIL_CACHE_TTL")
 
 CACHES = {
     "default": {
