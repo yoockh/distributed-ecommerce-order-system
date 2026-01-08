@@ -1,3 +1,4 @@
+from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -13,7 +14,7 @@ from apps.orders.models import Order
 
 class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     """
-    - GET  /api/orders/        -> list (tanpa logs)
+    - GET  /api/orders/        -> list (without logs)
     - GET  /api/orders/{id}/   -> detail (with logs)
     - POST /api/orders/        -> purchase
     """
@@ -31,6 +32,16 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
             return OrderDetailSerializer
         return OrderListSerializer
 
+    @extend_schema(
+        request=PurchaseRequestSerializer,
+        responses={
+            201: OrderListSerializer,
+            404: OpenApiResponse(description="Product not found"),
+            409: OpenApiResponse(description="Out of stock"),
+            422: OpenApiResponse(description="Invalid quantity"),
+        },
+        description="create order with background processing",
+    )
     def create(self, request, *args, **kwargs):
         req = PurchaseRequestSerializer(data=request.data)
         req.is_valid(raise_exception=True)

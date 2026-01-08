@@ -134,8 +134,5 @@ SPECTACULAR_SETTINGS = {
     "TITLE": "Distributed E-Commerce Order API",
     "DESCRIPTION": "API untuk manajemen produk dan pemesanan dengan pemrosesan background.",
     "VERSION": "1.0.0",
-    "SERVERS": [
-        {"url": "http://localhost:8000", "description": "Local"},
-        {"url": "https://{host}", "description": "Production", "variables": {"host": {"default": "example.com"}}},
-    ],
+    "SERVERS": [],
 }
