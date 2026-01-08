@@ -1,6 +1,6 @@
 from typing import Any, cast
 
-from drf_spectacular.utils import OpenApiResponse, extend_schema
+from drf_spectacular.utils import OpenApiResponse, extend_schema, extend_schema_view
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
@@ -15,6 +15,22 @@ from apps.orders.services import OutOfStock, ProductNotFound, purchase_product
 from apps.orders.models import Order
 
 
+@extend_schema_view(
+    list=extend_schema(
+        responses={
+            200: OrderListSerializer(many=True),
+            400: OpenApiResponse(description="Invalid filters"),
+            500: OpenApiResponse(description="Unexpected server error"),
+        }
+    ),
+    retrieve=extend_schema(
+        responses={
+            200: OrderDetailSerializer,
+            404: OpenApiResponse(description="Order not found"),
+            500: OpenApiResponse(description="Unexpected server error"),
+        }
+    ),
+)
 class OrderViewSet(viewsets.ReadOnlyModelViewSet):
     """
     - GET  /api/orders/        -> list (without logs)
