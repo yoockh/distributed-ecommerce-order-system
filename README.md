@@ -127,8 +127,8 @@ Create `.env` (or use `.env.example`) and set at least:
 
 ### Core
 - `DJANGO_SECRET_KEY` — required
-- `DJANGO_DEBUG` — `true/false`
-- `DJANGO_ALLOWED_HOSTS` — comma-separated, e.g. `34.101.175.6,localhost,127.0.0.1`
+- `DEBUG` — `true/false`
+- `ALLOWED_HOSTS` — comma-separated, e.g. `34.101.175.6,localhost,127.0.0.1`
 
 ### Database
 - `DATABASE_URL` — recommended to point to **Supabase Postgres** in production.
@@ -163,6 +163,9 @@ pip install -r requirements.txt
 cp .env.example .env
 # edit .env with Supabase DATABASE_URL, Redis URLs, Celery backend, cache TTL, etc.
 
+# Enter Django project directory
+cd src
+
 # Run migrations
 python manage.py migrate
 
@@ -178,6 +181,10 @@ celery -A config worker -l info
 ```bash
 docker compose up --build
 ```
+
+Notes:
+- When running Django **inside Docker** (this repo’s default Compose setup), your `.env` should use hostnames `db` and `redis` (see `.env.example`).
+- When running Django **directly on your host**, use `localhost` instead.
 
 Exposed services:
 
@@ -200,10 +207,13 @@ To use managed Supabase/Redis instead of local containers, remove the `db`/`redi
 ## Testing
 
 ```bash
+cd src
 python manage.py test apps.orders
 ```
 
 Tests cover the purchase service (stock decrement, task enqueue, out-of-stock and product-not-found scenarios). Add more test modules under `apps/catalog/tests.py` and `apps/orders/tests.py` as needed.
+
+If you want catalog tests, create `src/apps/catalog/tests.py` and add them there.
 
 ## Notes / Troubleshooting
 

@@ -1,8 +1,26 @@
 .env
 
-.venv
-
+# Python
+.venv/
 __pycache__/
-*.pyc
+*.py[cod]
+*$py.class
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pytype/
+.coverage
+coverage.xml
+htmlcov/
+dist/
+build/
+*.egg-info/
+
+# Django
+*.log
+local_settings.py
+db.sqlite3
+staticfiles/
+media/
 
 django-guide.md
