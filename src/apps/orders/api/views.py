@@ -1,7 +1,10 @@
+from typing import Any, Type, cast
+
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
+from rest_framework.serializers import BaseSerializer
 
 from apps.orders.api.serializers import (
     OrderDetailSerializer,
@@ -27,7 +30,7 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
             return qs.prefetch_related("logs")
         return qs
 
-    def get_serializer_class(self):
+    def get_serializer_class(self) -> Type[BaseSerializer]:
         if self.action == "retrieve":
             return OrderDetailSerializer
         return OrderListSerializer
@@ -46,10 +49,14 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
         req = PurchaseRequestSerializer(data=request.data)
         req.is_valid(raise_exception=True)
 
+        validated = cast(dict[str, Any], req.validated_data)
+        product_id = cast(int, validated["product_id"])
+        quantity = cast(int, validated["quantity"])
+
         try:
             order = purchase_product(
-                product_id=req.validated_data["product_id"],
-                quantity=req.validated_data["quantity"],
+                product_id=product_id,
+                quantity=quantity,
             )
         except ProductNotFound:
             return Response({"detail": "Product not found"}, status=status.HTTP_404_NOT_FOUND)
