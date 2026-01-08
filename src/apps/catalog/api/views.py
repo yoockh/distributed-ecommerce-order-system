@@ -20,18 +20,21 @@ logger = logging.getLogger(__name__)
         responses={
             200: ProductSerializer(many=True),
             400: OpenApiResponse(description="Invalid query params"),
+            500: OpenApiResponse(description="Unexpected server error"),
         }
     ),
     retrieve=extend_schema(
         responses={
             200: ProductSerializer,
             404: OpenApiResponse(description="Product not found"),
+            500: OpenApiResponse(description="Unexpected server error"),
         }
     ),
     create=extend_schema(
         responses={
             201: ProductSerializer,
             400: OpenApiResponse(description="Validation error"),
+            500: OpenApiResponse(description="Unexpected server error"),
         }
     ),
     update=extend_schema(
@@ -39,6 +42,7 @@ logger = logging.getLogger(__name__)
             200: ProductSerializer,
             400: OpenApiResponse(description="Validation error"),
             404: OpenApiResponse(description="Product not found"),
+            500: OpenApiResponse(description="Unexpected server error"),
         }
     ),
     partial_update=extend_schema(
@@ -46,12 +50,14 @@ logger = logging.getLogger(__name__)
             200: ProductSerializer,
             400: OpenApiResponse(description="Validation error"),
             404: OpenApiResponse(description="Product not found"),
+            500: OpenApiResponse(description="Unexpected server error"),
         }
     ),
     destroy=extend_schema(
         responses={
             204: OpenApiResponse(description="Product deleted"),
             404: OpenApiResponse(description="Product not found"),
+            500: OpenApiResponse(description="Unexpected server error"),
         }
     ),
 )
