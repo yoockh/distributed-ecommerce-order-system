@@ -1,10 +1,10 @@
-from typing import Any, Type, cast
+from typing import Any, cast
 
 from drf_spectacular.utils import OpenApiResponse, extend_schema
 from rest_framework import status, viewsets
 from rest_framework.permissions import AllowAny
 from rest_framework.response import Response
-from rest_framework.serializers import BaseSerializer
+from rest_framework.serializers import Serializer
 
 from apps.orders.api.serializers import (
     OrderDetailSerializer,
@@ -30,7 +30,7 @@ class OrderViewSet(viewsets.ReadOnlyModelViewSet):
             return qs.prefetch_related("logs")
         return qs
 
-    def get_serializer_class(self) -> Type[BaseSerializer]:
+    def get_serializer_class(self):  # type: ignore[override]
         if self.action == "retrieve":
             return OrderDetailSerializer
         return OrderListSerializer
