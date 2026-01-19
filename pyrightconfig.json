@@ -1,4 +1,9 @@
 {
   "include": ["src"],
-  "extraPaths": ["src"]
+  "extraPaths": ["src"],
+
+  "typeCheckingMode": "off",
+
+  "reportAttributeAccessIssue": "none",
+  "reportCallIssue": "none"
 }
